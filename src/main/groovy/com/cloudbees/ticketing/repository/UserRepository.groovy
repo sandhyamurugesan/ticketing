@@ -6,4 +6,5 @@ import com.cloudbees.ticketing.model.UserEntity
 
 interface UserRepository extends JpaRepository<UserEntity, Long> {
     UserEntity findByFirstNameAndLastName(String firstName, String lastName)
+    UserEntity findByEmail(String email)
 }

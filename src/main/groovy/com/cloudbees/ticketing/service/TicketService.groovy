@@ -7,5 +7,6 @@ interface TicketService {
     ReceiptDTO purchaseTicket(TicketDTO ticketDTO)
     ReceiptDTO getReceiptByUserId(Long userId)
 	ReceiptDTO getReceiptById(Long recId)
+    List<ReceiptDTO>  getAllReceipts()
    
 }

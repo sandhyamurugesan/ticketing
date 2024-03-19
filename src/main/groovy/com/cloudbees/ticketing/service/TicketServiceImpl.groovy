@@ -1,5 +1,7 @@
-package com.cloudbees.ticketing.service;
+package com.cloudbees.ticketing.service
 
+import com.cloudbees.ticketing.model.Ticket
+import com.cloudbees.ticketing.model.Train;
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -28,10 +30,9 @@ class TicketServiceImpl implements TicketService {
 		
         def user = userRepository.findByEmail(ticketDTO.email)
         
-		user.seat="Section A${seatNumber}";
+		user.seat="Section A${seatNumber}"
+		def ticket = new Ticket(fromStation: ticketDTO.from, toStation: ticketDTO.to, price: ticketDTO.price, seat: user.seat)
 		user.addToTickets(ticket)
-		def ticket = new Ticket(fromStation: request.from, toStation: request.to, price: request.price, seat: user.seat)
-		
 		
         userRepository.save(user)
 		//ticketRepository.save(ticket)
@@ -41,7 +42,7 @@ class TicketServiceImpl implements TicketService {
             from: ticketDTO.from,
             to: ticketDTO.to,
             user: "${ticketDTO.firstName} ${ticketDTO.lastName}",
-            pricePaid: request.price,
+            pricePaid: ticketDTO.price,
 			seat: user.seat
 			
         )
@@ -75,5 +76,24 @@ class TicketServiceImpl implements TicketService {
 			user: ticket.user,
 			pricePaid: ticket.price
 		)
+	}
+
+	@Override
+	List<ReceiptDTO> getAllReceipts() {
+		def tickets = ticketRepository.findAll()
+		if(tickets.isEmpty()){
+			new TicketServiceException("No tickets added")
+		}
+
+		def receiptDTOs = tickets.collect { ticket ->
+			new ReceiptDTO(
+					from: ticket.fromStation,
+					to: ticket.toStation,
+					user: ticket.user,
+					pricePaid: ticket.price
+			)
+		}
+
+		return receiptDTOs
 	}
 }

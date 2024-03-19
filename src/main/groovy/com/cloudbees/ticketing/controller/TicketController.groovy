@@ -1,4 +1,4 @@
-package com.cloudbees.ticketing.controller;
+package com.cloudbees.ticketing.controller
 
 import groovy.transform.CompileStatic
 import io.swagger.annotations.*
@@ -10,43 +10,25 @@ import com.cloudbees.ticketing.service.TicketService
 
 @CompileStatic
 @RestController
-@RequestMapping("/api/ticket")
+@RequestMapping("/ticket")
 class TicketController {
     TicketService ticketService
-	
-	UserService userService
 
     @PostMapping("/purchase")
     ReceiptDTO purchaseTicket(@RequestBody TicketDTO ticketDTO) {
         ticketService.purchaseTicket(ticketDTO)
     }
 
-    @GetMapping("/receipt")
-    ReceiptDTO getReceipt(
-        @RequestParam String user
-    ) {
-        ticketService.getReceipt(user)
+    @GetMapping("")
+    List<ReceiptDTO> getReceiptAll() {
+        ticketService.getAllReceipts()
     }
 
-    @GetMapping("/seat")
-    String getUserSeat(
-        @RequestParam Long userId
+    @GetMapping("/user")
+    ReceiptDTO getReceiptByUser(
+            @RequestParam Long userId
     ) {
-        userService.getUserSeat(userId)
+        ticketService.getReceiptByUserId(userId)
     }
 
-    @DeleteMapping("/remove")
-    String removeUser(
-        @RequestParam Long userId
-    ) {
-        userService.removeUser(userId)
-    }
-
-    @PutMapping("/modify-seat")
-    String modifyUserSeat(
-        @RequestParam Long userId,
-        @RequestParam String newSeat
-    ) {
-        userService.modifyUserSeat(user, newSeat)
-    }
 }

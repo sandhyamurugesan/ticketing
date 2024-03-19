@@ -1,5 +1,6 @@
-package com.cloudbees.ticketing.service;
+package com.cloudbees.ticketing.service
 
+import com.cloudbees.ticketing.model.Train;
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -14,12 +15,12 @@ class UserServiceImpl implements UserService {
    
 
     UserRepository userRepository
-	Train train = new Train(id: 1, name: "London to France", totalSeats: 100, seatsOccupied: 0)
+    Train train = new Train(id: 1, name: "London to France", totalSeats: 100, seatsOccupied: 0)
 	
 
     @Transactional(readOnly = true)
     @Override
-    String getUserSeat(String userId) {
+    String getUserSeat(Long userId) {
         def userDetails = userRepository.findById(userId).orElseThrow { new TicketServiceException("User not found with ID: $userId") }
         if (!userDetails) {
             throw new TicketServiceException("User $user not found.")
@@ -27,6 +28,7 @@ class UserServiceImpl implements UserService {
 
         return userDetails.seat
     }
+
 
     @Transactional
     @Override
