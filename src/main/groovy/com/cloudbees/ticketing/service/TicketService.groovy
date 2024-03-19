@@ -5,8 +5,8 @@ import com.cloudbees.ticketing.dto.TicketDTO
 
 interface TicketService {
     ReceiptDTO purchaseTicket(TicketDTO ticketDTO)
-    ReceiptDTO getReceiptByUserId(Long userId)
+    List<ReceiptDTO> getReceiptByUserId(Long userId)
 	ReceiptDTO getReceiptById(Long recId)
     List<ReceiptDTO>  getAllReceipts()
-   
+    String removeReceiptByUserId(Long userId, Long trainId)
 }
