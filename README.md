@@ -67,4 +67,3 @@ The User entity represents a user of the train ticketing system. It includes the
 
 ---
 
-Feel free to customize this README content further to match your project's specific requirements and implementation details.
