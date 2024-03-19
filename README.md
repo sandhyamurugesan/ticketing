@@ -1,6 +1,12 @@
 # Train Ticketing System
 
-This project is a train ticketing system that allows users to purchase tickets for a train journey from London to France.
+This project is a train ticketing system that allows users to purchase tickets for a train journey 
+
+## Pre requisities:
+1. Groovy installed
+2. Intellij build
+3. JDK 11 configured
+
 
 ## Entities
 
