@@ -7,6 +7,11 @@ This project is a train ticketing system that allows users to purchase tickets f
 2. Intellij build
 3. JDK 11 configured
 
+## Limitations
+1. Added a default train
+2. Sections are hard coded
+3. Entites have to be created manually
+
 
 ## Entities
 
