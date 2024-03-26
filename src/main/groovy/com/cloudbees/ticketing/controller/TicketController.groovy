@@ -1,7 +1,6 @@
 package com.cloudbees.ticketing.controller
 
 import groovy.transform.CompileStatic
-import io.swagger.annotations.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
@@ -38,7 +37,7 @@ class TicketController {
         ticketService.getReceiptByUserId(userId)
     }
 
-    @DeleteMapping("train/{trainId}/users/{userId}")
+    @DeleteMapping("trains/{trainId}/users/{userId}")
     String getReceiptByUser(
             @PathVariable Long userId,
             @PathVariable Long trainId

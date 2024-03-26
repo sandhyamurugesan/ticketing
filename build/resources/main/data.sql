@@ -25,13 +25,13 @@ CREATE TABLE Ticket (
                         FOREIGN KEY (train_id) REFERENCES Train(id)
 );
 
-INSERT INTO train (name, total_seats, seats_occupied) VALUES ('London to Paris', 100, 0);
-INSERT INTO train (name, total_seats, seats_occupied) VALUES ('Paris to Amsterdam', 150, 0);
+INSERT INTO Train (name, total_seats, seats_occupied) VALUES ('London to Paris', 100, 0);
+INSERT INTO Train (name, total_seats, seats_occupied) VALUES ('Paris to Amsterdam', 150, 0);
 
 
-INSERT INTO user (first_name, last_name, email, seat) VALUES ('John', 'Doe', 'john.doe@example.com', 'SectionA1');
-INSERT INTO user (first_name, last_name, email, seat) VALUES ('Jane', 'Smith', 'jane.smith@example.com', 'SectionB1');
+INSERT INTO User (first_name, last_name, email, seat) VALUES ('John', 'Doe', 'john.doe@example.com', 'SectionA1');
+INSERT INTO User (first_name, last_name, email, seat) VALUES ('Jane', 'Smith', 'jane.smith@example.com', 'SectionB1');
 
 
-INSERT INTO ticket (user_id, train_id, price, seat, from_station, to_station) VALUES (1, 1, 50.0, 'SectionA1', 'London', 'Paris');
-INSERT INTO ticket (user_id, train_id, price, seat, from_station, to_station) VALUES (2, 2, 75.0, 'SectionB1', 'Paris', 'Amsterdam');
+INSERT INTO Ticket (user_id, train_id, price, seat, from_station, to_station) VALUES (1, 1, 50.0, 'SectionA1', 'London', 'Paris');
+INSERT INTO Ticket (user_id, train_id, price, seat, from_station, to_station) VALUES (2, 2, 75.0, 'SectionB1', 'Paris', 'Amsterdam');

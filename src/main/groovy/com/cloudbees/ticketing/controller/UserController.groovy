@@ -18,6 +18,13 @@ class UserController {
     @Autowired
     UserService userService
 
+
+    @PostMapping("/")
+    String addUser(@RequestBody UserDTO userDTO) {
+        userService.addUser(userDTO)
+    }
+
+
     @GetMapping("/seat/{userId}")
     String getUserSeat(@PathVariable Long userId) {
         userService.getUserSeat(userId)

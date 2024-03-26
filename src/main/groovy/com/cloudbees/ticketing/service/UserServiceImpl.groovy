@@ -1,6 +1,7 @@
 package com.cloudbees.ticketing.service
 
 import com.cloudbees.ticketing.dto.UserDTO
+import com.cloudbees.ticketing.model.Ticket
 import com.cloudbees.ticketing.model.Train
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service
@@ -18,7 +19,16 @@ class UserServiceImpl implements UserService {
     @Autowired
     UserRepository userRepository
     Train train = new Train(id: 1, name: "London to France", totalSeats: 100, seatsOccupied: 0)
-	
+
+    @Transactional(readOnly = true)
+    @Override
+    String addUser(UserDTO userDTO) {
+        def user = new UserEntity(firstName: userDTO.firstName, lastName: userDTO.lastName, email: userDTO.email, seat: userDTO.seat)
+
+        userRepository.save(user)
+
+        return user.id
+    }
 
     @Transactional(readOnly = true)
     @Override

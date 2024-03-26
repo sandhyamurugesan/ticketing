@@ -21,24 +21,20 @@ class TicketServiceImpl implements TicketService {
 	@Autowired
 	TicketRepository ticketRepository
 
-	Train train = new Train(id: 1, name: "London to France", totalSeats: 100, seatsOccupied: 0)
-
-
     @Transactional
     @Override
     ReceiptDTO purchaseTicket(TicketDTO ticketDTO) {
-		
+		Train train = new Train(id: 1, name: "London to France", totalSeats: 100, seatsOccupied: 0)
+
 		def seatNumber = train.seatsOccupied + 1
 		train.seatsOccupied++
 		
         def user = userRepository.findByEmail(ticketDTO.email)
-        
 		user.seat="Section A${seatNumber}"
 		def ticket = new Ticket(fromStation: ticketDTO.from, toStation: ticketDTO.to, price: ticketDTO.price, seat: user.seat)
-		user.tickets.add(ticket)
-		
-        userRepository.save(user)
-		//ticketRepository.save(ticket)
+		user.tickets=Arrays.asList(ticket)
+		ticket.user=user
+		ticketRepository.save(ticket)
         
 
         def receipt = new ReceiptDTO(
@@ -79,6 +75,7 @@ class TicketServiceImpl implements TicketService {
 		return new ReceiptDTO(
 			from: ticket.fromStation,
 			to: ticket.toStation,
+
 			user: ticket.user,
 			pricePaid: ticket.price,
 			seat: ticket.seat

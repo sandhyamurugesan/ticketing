@@ -8,4 +8,5 @@ interface UserService {
     String removeUser(Long userId)
 	String modifyUserSeat(Long userId, String newSeat)
     List<UserDTO> getUsersSeatBySection(String section)
+    String addUser(UserDTO userDTO)
 }
