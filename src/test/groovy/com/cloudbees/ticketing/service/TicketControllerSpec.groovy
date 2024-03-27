@@ -3,6 +3,7 @@ package com.cloudbees.ticketing.service
 import com.cloudbees.ticketing.controller.TicketController
 import com.cloudbees.ticketing.dto.ReceiptDTO
 import com.cloudbees.ticketing.dto.TicketDTO
+import com.cloudbees.ticketing.dto.TrainDTO
 import com.cloudbees.ticketing.dto.UserDTO
 import com.cloudbees.ticketing.repository.TicketRepository
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -41,8 +42,23 @@ class TicketControllerSpec extends Specification {
     ObjectMapper objectMapper = new ObjectMapper()
 
     def userId
+    def trainId
 
     def setup() {
+        def trainDTO= new TrainDTO(trainNo:2631, name: "London Express", totalSeats: 110 )
+        def trainDTO1= new TrainDTO(trainNo:2222, name: "Delhi Express", totalSeats: 190 )
+        def trainResponse=mockMvc.perform(post("/trains/")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(trainDTO)))
+                .andExpect(status().isOk())
+                .andReturn()
+        trainId=trainResponse.response.contentAsString
+        trainResponse=mockMvc.perform(post("/trains/")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(trainDTO1)))
+                .andExpect(status().isOk())
+                .andReturn()
+
         def userDTO= new UserDTO(firstName: "Test", lastName: "test", email: "test@example.com", seat:"SectionA1" )
         def userResponse=mockMvc.perform(post("/users/")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -54,8 +70,8 @@ class TicketControllerSpec extends Specification {
 
     void "purchaseTicket should return receipt"() {
         given:
-        def ticketDTO = new TicketDTO(from: "London", to: "Paris", email: "test@example.com", price: 100)
-        String expectedResponse = "{\"from\":\"London\",\"to\":\"Paris\",\"user\":\"com.cloudbees.ticketing.model.UserEntity(${userId}, Test, test, test@example.com, Section A1)\",\"pricePaid\":100.0,\"seat\":\"Section A1\"}";
+        def ticketDTO = new TicketDTO(from: "London", to: "Paris", email: "test@example.com", price: 100, trainNo: 2631)
+        String expectedResponse = "{\"from\":\"London\",\"to\":\"Paris\",\"user\":\"com.cloudbees.ticketing.model.UserEntity(1, Test, test, test@example.com, Section A1)\",\"pricePaid\":100.0,\"seat\":\"Section A1\",\"trainName\":\"London Express\"}";
         when:
         def ticketPurchasedResponse = mockMvc.perform(post("/tickets/purchase")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -69,9 +85,9 @@ class TicketControllerSpec extends Specification {
 
     def "getReceiptAll should return all receipts"() {
        given:
-        def ticketDTO = new TicketDTO(from: "London", to: "Paris", email: "test@example.com", price: 100)
-        def ticketDTO1 = new TicketDTO(from: "Chennai", to: "Delhi", email: "test@example.com", price: 500)
-        def expectedResponse="[{\"from\":\"London\",\"to\":\"Paris\",\"user\":\"com.cloudbees.ticketing.model.UserEntity(${userId}, Test, test, test@example.com, Section A1)\",\"pricePaid\":100.0,\"seat\":\"Section A1\"},{\"from\":\"Chennai\",\"to\":\"Delhi\",\"user\":\"com.cloudbees.ticketing.model.UserEntity(${userId}, Test, test, test@example.com, Section A1)\",\"pricePaid\":500.0,\"seat\":\"Section A1\"}]"
+        def ticketDTO = new TicketDTO(from: "London", to: "Paris", email: "test@example.com", price: 100,  trainNo: 2631)
+        def ticketDTO1 = new TicketDTO(from: "Chennai", to: "Delhi", email: "test@example.com", price: 500, trainNo: 2222)
+        def expectedResponse="[{\"from\":\"London\",\"to\":\"Paris\",\"user\":\"com.cloudbees.ticketing.model.UserEntity(${userId}, Test, test, test@example.com, Section A1)\",\"pricePaid\":100.0,\"seat\":\"Section A1\",\"trainName\":\"London Express\"},{\"from\":\"Chennai\",\"to\":\"Delhi\",\"user\":\"com.cloudbees.ticketing.model.UserEntity(${userId}, Test, test, test@example.com, Section A1)\",\"pricePaid\":500.0,\"seat\":\"Section A1\",\"trainName\":\"Delhi Express\"}]"
       when:
        mockMvc.perform(post("/tickets/purchase")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -96,8 +112,8 @@ class TicketControllerSpec extends Specification {
     void "getReceiptById should return receipt by id"() {
         given:
         def receiptId = 4L
-        def ticketDTO = new TicketDTO(from: "London", to: "Paris", email: "test@example.com", price: 100)
-        def expectedResponse= "{\"from\":\"London\",\"to\":\"Paris\",\"user\":\"com.cloudbees.ticketing.model.UserEntity(${userId}, Test, test, test@example.com, Section A1)\",\"pricePaid\":100.0,\"seat\":\"Section A1\"}"
+        def ticketDTO = new TicketDTO(from: "London", to: "Paris", email: "test@example.com", price: 100, trainNo: 2222)
+        def expectedResponse= "{\"from\":\"London\",\"to\":\"Paris\",\"user\":\"com.cloudbees.ticketing.model.UserEntity(${userId}, Test, test, test@example.com, Section A1)\",\"pricePaid\":100.0,\"seat\":\"Section A1\",\"trainName\":\"Delhi Express\"}"
         when:
         mockMvc.perform(post("/tickets/purchase")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -114,8 +130,8 @@ class TicketControllerSpec extends Specification {
 
     void "getReceiptByUser should return receipts by user id"() {
         given:
-        def ticketDTO = new TicketDTO(from: "Chennai", to: "Delhi", email: "test@example.com", price: 100)
-        def expectedResponse= "[{\"from\":\"Chennai\",\"to\":\"Delhi\",\"user\":\"com.cloudbees.ticketing.model.UserEntity(${userId}, Test, test, test@example.com, Section A1)\",\"pricePaid\":100.0,\"seat\":\"Section A1\"}]"
+        def ticketDTO = new TicketDTO(from: "Chennai", to: "Delhi", email: "test@example.com", price: 100, trainNo: 2222)
+        def expectedResponse= "[{\"from\":\"Chennai\",\"to\":\"Delhi\",\"user\":\"com.cloudbees.ticketing.model.UserEntity(${userId}, Test, test, test@example.com, Section A1)\",\"pricePaid\":100.0,\"seat\":\"Section A1\",\"trainName\":\"Delhi Express\"}]"
         when:
         mockMvc.perform(post("/tickets/purchase")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -134,7 +150,7 @@ class TicketControllerSpec extends Specification {
         given:
         def userId = 1L
         def trainId = 1L
-        def ticketDTO = new TicketDTO(from: "Chennai", to: "Delhi", email: "test@example.com", price: 100)
+        def ticketDTO = new TicketDTO(from: "Chennai", to: "Delhi", email: "test@example.com", price: 100, trainNo: 2222)
         when:
         mockMvc.perform(post("/tickets/purchase")
                 .contentType(MediaType.APPLICATION_JSON)

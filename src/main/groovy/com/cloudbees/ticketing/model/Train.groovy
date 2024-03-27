@@ -12,6 +12,7 @@ class Train {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
      Long id
+    int trainNo
     String name
     int totalSeats
     int seatsOccupied

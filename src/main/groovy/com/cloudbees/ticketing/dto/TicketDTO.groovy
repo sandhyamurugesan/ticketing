@@ -5,4 +5,5 @@ class TicketDTO {
     String to
     String email
     double price
+    int trainNo
 }

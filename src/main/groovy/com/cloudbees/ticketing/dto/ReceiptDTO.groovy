@@ -6,4 +6,5 @@ class ReceiptDTO {
     String user
     BigDecimal pricePaid
 	String seat
+    String trainName
 }

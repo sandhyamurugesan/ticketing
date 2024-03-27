@@ -2,6 +2,7 @@ package com.cloudbees.ticketing.service
 
 import com.cloudbees.ticketing.model.Ticket
 import com.cloudbees.ticketing.model.Train
+import com.cloudbees.ticketing.repository.TrainRepository
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -20,11 +21,13 @@ class TicketServiceImpl implements TicketService {
     UserRepository userRepository
 	@Autowired
 	TicketRepository ticketRepository
+	@Autowired
+	TrainRepository trainRepository
 
     @Transactional
     @Override
     ReceiptDTO purchaseTicket(TicketDTO ticketDTO) {
-		Train train = new Train(id: 1, name: "London to France", totalSeats: 100, seatsOccupied: 0)
+		def train = trainRepository.findByTrainNo(ticketDTO.trainNo)
 
 		def seatNumber = train.seatsOccupied + 1
 		train.seatsOccupied++
@@ -34,6 +37,7 @@ class TicketServiceImpl implements TicketService {
 		def ticket = new Ticket(fromStation: ticketDTO.from, toStation: ticketDTO.to, price: ticketDTO.price, seat: user.seat)
 		user.tickets=Arrays.asList(ticket)
 		ticket.user=user
+		ticket.train=train
 		ticketRepository.save(ticket)
         
 
@@ -42,7 +46,8 @@ class TicketServiceImpl implements TicketService {
             to: ticketDTO.to,
             user: user,
             pricePaid: ticketDTO.price,
-			seat: user.seat
+			seat: user.seat,
+			trainName: train.name
 			
         )
 
@@ -60,7 +65,8 @@ class TicketServiceImpl implements TicketService {
 					to: ticket.toStation,
 					user: userDetails,
 					pricePaid: ticket.price,
-					seat: ticket.seat
+					seat: ticket.seat,
+					trainName: ticket.train.name
 			)
 		}
 
@@ -75,10 +81,10 @@ class TicketServiceImpl implements TicketService {
 		return new ReceiptDTO(
 			from: ticket.fromStation,
 			to: ticket.toStation,
-
 			user: ticket.user,
 			pricePaid: ticket.price,
-			seat: ticket.seat
+			seat: ticket.seat,
+			trainName: ticket.train.name
 		)
 	}
 
@@ -95,7 +101,8 @@ class TicketServiceImpl implements TicketService {
 					to: ticket.toStation,
 					user: ticket.user,
 					pricePaid: ticket.price,
-					seat: ticket.seat
+					seat: ticket.seat,
+					trainName: ticket.train.name
 			)
 		}
 
