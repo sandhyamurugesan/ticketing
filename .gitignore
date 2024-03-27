@@ -61,3 +61,10 @@ build/classes/groovy/main/com/cloudbees/ticketing/service/TicketServiceImpl$_rem
 build/classes/groovy/main/com/cloudbees/ticketing/service/TicketServiceImpl.class
 build/classes/groovy/main/com/cloudbees/ticketing/service/TrainService.class
 build/classes/groovy/main/com/cloudbees/ticketing/service/TrainServiceImpl.class
+.gradle/8.6/executionHistory/executionHistory.bin
+.gradle/8.6/executionHistory/executionHistory.lock
+.gradle/8.6/fileHashes/fileHashes.bin
+.gradle/8.6/fileHashes/fileHashes.lock
+.gradle/buildOutputCleanup/buildOutputCleanup.lock
+build/resources/main/application.properties
+build/resources/main/data.sql
